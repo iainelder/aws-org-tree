@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "aws-org-tree"
+version = "0.1.0"
+description = ""
+authors = ["Iain Samuel McLean Elder <iain@isme.es>"]
+
+[tool.poetry.scripts]
+aws-org-tree = "aws_org_tree:main"
+
+[tool.poetry.dependencies]
+python = "*"
+boto3 = "^1.18.50"
+anytree = "^2.8.0"
+logdecorator = "^2.2"
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.28.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
