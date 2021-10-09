@@ -16,6 +16,7 @@ boto-collator-client = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.28.0"
+ipdb = "^0.13.9"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

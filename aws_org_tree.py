@@ -1,16 +1,19 @@
 import boto3
 from boto_collator_client import CollatorClient
 import anytree
+import anytree.exporter
 import logdecorator
 import logging
+import datetime
+
 
 logger = None
 
+
 def main():
+
     configure_logging()
-    ot = OrgTree()
-    ot.build()
-    print(ot.render())
+    print(export_org_tree())
 
 
 def configure_logging():
@@ -27,6 +30,15 @@ def configure_logging():
     logger.setLevel(logging.DEBUG)
 
 
+def export_org_tree():
+
+    return (
+        OrgTree()
+        .build()
+        .to_json()
+    )
+
+
 class OrgTree(object):
 
     def __init__(self, session=None):
@@ -41,6 +53,24 @@ class OrgTree(object):
 
         root = self._get_root()
         self._root = self._build_tree(root, parent=None)
+        return self
+
+
+    def to_dict(self):
+
+        return anytree.exporter.DictExporter().export(self._root)
+
+
+    def to_json(self):
+
+        def isoformat(obj):
+
+            if isinstance(obj, (datetime.datetime)):
+                return obj.isoformat()
+
+            raise TypeError(f"Type {type(obj)} is not serializable")
+
+        return anytree.exporter.JsonExporter(default=isoformat).export(self._root)
 
 
     def render(self):
@@ -74,8 +104,7 @@ class OrgTree(object):
 
     @logdecorator.log_on_end(logging.DEBUG, "Built node {result}", logger=logger)
     def _build_node(self, org_thing, parent):
-
-        return anytree.AnyNode(**org_thing, parent=parent)
+        return anytree.Node(org_thing["Id"], **org_thing, parent=parent)
 
 
     @logdecorator.log_on_start(logging.DEBUG, "Get {child_type} children for parent={parent_id}", logger=logger)
