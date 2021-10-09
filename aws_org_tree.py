@@ -1,6 +1,7 @@
 import boto3
 from boto_collator_client import CollatorClient
 import anytree
+from anytree import LevelOrderIter
 import anytree.exporter
 import logdecorator
 import logging
@@ -89,11 +90,11 @@ class OrgTree(object):
 
         root = self._build_node(org_thing, parent)
 
-        if root.Type == "ACCOUNT":
+        if root.Properties["Type"] == "ACCOUNT":
             return root
         
-        child_accounts = self._get_children(root.Id, "ACCOUNT")
-        child_ohyous = self._get_children(root.Id, "ORGANIZATIONAL_UNIT")
+        child_accounts = self._get_children(root.Properties["Id"], "ACCOUNT")
+        child_ohyous = self._get_children(root.Properties["Id"], "ORGANIZATIONAL_UNIT")
 
         for children in [child_accounts, child_ohyous]:
             for ch in children:
@@ -104,7 +105,7 @@ class OrgTree(object):
 
     @logdecorator.log_on_end(logging.DEBUG, "Built node {result}", logger=logger)
     def _build_node(self, org_thing, parent):
-        return anytree.Node(org_thing["Id"], **org_thing, parent=parent)
+        return anytree.Node(org_thing["Id"], Properties=org_thing, parent=parent)
 
 
     @logdecorator.log_on_start(logging.DEBUG, "Get {child_type} children for parent={parent_id}", logger=logger)
