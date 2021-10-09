@@ -1,4 +1,5 @@
 import boto3
+from boto_collator_client import CollatorClient
 import anytree
 import logdecorator
 import logging
@@ -38,15 +39,22 @@ class OrgTree(object):
     @logdecorator.log_on_end(logging.INFO, "Finish building org tree", logger=logger)
     def build(self):
 
-        orgs = self._session.client("organizations")
-        root = orgs.list_roots()["Roots"][0]
+        root = self._get_root()
         self._root = self._build_tree(root, parent=None)
+
 
     def render(self):
         return anytree.RenderTree(self._root)
 
+    @logdecorator.log_on_start(logging.DEBUG, "Get org root", logger=logger)
+    @logdecorator.log_on_end(logging.DEBUG, "Got org root {result[""Id""]}", logger=logger)
+    def _get_root(self):
 
-    @logdecorator.log_on_end(logging.DEBUG, "Built node {result}", logger=logger)
+        root = self._orgs.list_roots()["Roots"][0]
+        root["Type"] = "ROOT"
+        return root
+
+
     def _build_tree(self, org_thing, parent):
 
         root = self._build_node(org_thing, parent)
@@ -67,24 +75,20 @@ class OrgTree(object):
     @logdecorator.log_on_end(logging.DEBUG, "Built node {result}", logger=logger)
     def _build_node(self, org_thing, parent):
 
-        if org_thing["Id"].startswith("r-"):
-            org_thing["Type"] = "ROOT"
-
         return anytree.AnyNode(**org_thing, parent=parent)
 
 
     @logdecorator.log_on_start(logging.DEBUG, "Get {child_type} children for parent={parent_id}", logger=logger)
     @logdecorator.log_on_end(logging.DEBUG, "Parent {parent_id} has {child_type} children {result}", logger=logger)
     def _get_children(self, parent_id, child_type):
-        return (
-            self._orgs.get_paginator("list_children")
-            .paginate(ParentId=parent_id, ChildType=child_type)
-            .build_full_result()
-            ["Children"]
-        )
 
-    # TODO: use these functions that return more metadata in a single call.
-    @logdecorator.log_on_start(logging.INFO, "Get organizational units for parent={parent_id}", logger=logger)
-    @logdecorator.log_on_end(logging.INFO, "Parent {parent_id} has organizational units {result}", logger=logger)
-    def _get_organizational_units_for_parent(self, parent_id):
-        return self._orgs.list_organizational_units_for_parent(ParentId=parent_id)["OrganizationalUnits"]
+        orgs = CollatorClient(self._orgs)
+
+        children = orgs.list_children(ParentId=parent_id, ChildType=child_type)["Children"]
+
+        details = {
+            "ACCOUNT": orgs.list_accounts_for_parent(ParentId=parent_id)["Accounts"],
+            "ORGANIZATIONAL_UNIT": orgs.list_organizational_units_for_parent(ParentId=parent_id)["OrganizationalUnits"]
+        }[child_type]
+
+        return [{**c, **d} for c, d in zip(children, details)]
