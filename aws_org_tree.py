@@ -1,3 +1,4 @@
+import json
 import boto3
 from boto_collator_client import CollatorClient
 import anytree
@@ -11,10 +12,11 @@ import datetime
 logger = None
 
 
+# TODO: add output structure option: tree or flat
 def main():
 
     configure_logging()
-    print(export_org_tree())
+    print(export_org_flat())
 
 
 def configure_logging():
@@ -37,6 +39,15 @@ def export_org_tree():
         OrgTree()
         .build()
         .to_json()
+    )
+
+
+def export_org_flat():
+
+    return (
+        OrgTree()
+        .build()
+        .to_flat_json()
     )
 
 
@@ -64,18 +75,28 @@ class OrgTree(object):
 
     def to_json(self):
 
-        def isoformat(obj):
+        return anytree.exporter.JsonExporter(cls=ISODateJSONEncoder).export(self._root)
 
-            if isinstance(obj, (datetime.datetime)):
-                return obj.isoformat()
 
-            raise TypeError(f"Type {type(obj)} is not serializable")
+    def to_flat_dict(self):
 
-        return anytree.exporter.JsonExporter(default=isoformat).export(self._root)
+        return [
+            {
+                **n.Properties,
+                **{"Parent": n.parent.Properties["Id"] if n.parent else None}
+            }
+            for n in LevelOrderIter(self._root)
+        ]
+
+
+    def to_flat_json(self):
+
+        return json.dumps(self.to_flat_dict(), cls=ISODateJSONEncoder)
 
 
     def render(self):
         return anytree.RenderTree(self._root)
+
 
     @logdecorator.log_on_start(logging.DEBUG, "Get org root", logger=logger)
     @logdecorator.log_on_end(logging.DEBUG, "Got org root {result[""Id""]}", logger=logger)
@@ -108,6 +129,7 @@ class OrgTree(object):
         return anytree.Node(org_thing["Id"], Properties=org_thing, parent=parent)
 
 
+    # TODO: refactor with proper (data?) classes for Root, Account, OrganizationalUnit
     @logdecorator.log_on_start(logging.DEBUG, "Get {child_type} children for parent={parent_id}", logger=logger)
     @logdecorator.log_on_end(logging.DEBUG, "Parent {parent_id} has {child_type} children {result}", logger=logger)
     def _get_children(self, parent_id, child_type):
@@ -122,3 +144,10 @@ class OrgTree(object):
         }[child_type]
 
         return [{**c, **d} for c, d in zip(children, details)]
+
+
+class ISODateJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        return super(self).default(obj)
