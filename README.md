@@ -18,3 +18,11 @@ Python tree libraries:
 * https://github.com/c0fec0de/anytree
 * https://github.com/joowani/binarytree
 * https://wiki.python.org/moin/PythonGraphApi
+
+## Other solutions
+
+In October 2021 AWS announced a new feature of the Organizations console called "Exporting all AWS account details for your organization".
+
+It provides less detail than the output of aws-org-tree.
+
+https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_export.html?icmpid=docs_orgs_console
