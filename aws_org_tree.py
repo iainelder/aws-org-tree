@@ -7,16 +7,25 @@ import anytree.exporter
 import logdecorator
 import logging
 import datetime
+import sys
 
 
 logger = None
 
 
-# TODO: add output structure option: tree or flat
 def main():
 
     configure_logging()
-    print(export_org_flat())
+
+    format = "text-tree" if len(sys.argv) == 1 else sys.argv[1]
+
+    formatter = {
+        "json-flat": export_org_flat,
+        "json-tree": export_org_tree,
+        "text-tree": render_org
+    }[format]
+
+    print(formatter())
 
 
 def configure_logging():
@@ -49,6 +58,16 @@ def export_org_flat():
         .build()
         .to_flat_json()
     )
+
+
+def render_org():
+    r = (
+        OrgTree()
+        .build()
+        .render()
+    )
+
+    return "".join([f"{pre}{node.name}\n" for pre, _, node in r])
 
 
 class OrgTree(object):
@@ -126,6 +145,7 @@ class OrgTree(object):
 
     @logdecorator.log_on_end(logging.DEBUG, "Built node {result}", logger=logger)
     def _build_node(self, org_thing, parent):
+        # Properties was a sin committed to make the json-flat formatting easier.
         return anytree.Node(org_thing["Id"], Properties=org_thing, parent=parent)
 
 
