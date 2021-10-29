@@ -9,6 +9,7 @@ import logging
 import datetime
 import sys
 
+__VERSION__ = "0.2.0"
 
 logger = None
 
