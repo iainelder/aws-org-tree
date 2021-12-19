@@ -20,7 +20,7 @@ aws-org-tree json-flat \
 > org-tree_B.json
 ```
 
-Quality checks. The number of objects should be the number of accounts plus the number of OUs.
+Quality checks. The number of objects should be the number of accounts plus the number of OUs. (In this example the numbers are just made up and they won't necessarily add up.)
 
 ```text
 $ jq 'length' org-tree_cfs.json 
