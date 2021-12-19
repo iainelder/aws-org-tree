@@ -1,7 +1,5 @@
 # aws-org-tree
 
-REDACT
-
 Uses AnyTree to render and export the complete organizational structure.
 
 ## Basics
@@ -149,7 +147,12 @@ aws-org-tree json-flat | jq
 
 The json-flat output format can be easily loaded into an SQL database. There one can build a ragged hierarchy bridge table that permits the organizational structure to be queried using SQL.
 
-As soon I have data I can share, I'll share my method here with examples.
+This allows you to answer questions such as:
+
+* How many accounts are in a given OU (organizational unit)?
+* A stack set has OUTDATED and INOPERABLE instances. Which OU are those accounts in?
+
+See [Building a hierarchy bridge table](building-a-hierarchy-bridge-table.md) for a way to do this using SQLite.
 
 ## Solution Notes
 
