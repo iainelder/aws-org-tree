@@ -14,7 +14,7 @@ def _create_org(session: Session) -> None:
     org.create_organization(FeatureSet="ALL")
 
 
-def _add_member_account(session: Session) -> AccountTypeDef:
+def _create_member(session: Session) -> AccountTypeDef:
     org = session.client("organizations")
     resp = org.create_account(Email="account@example.com", AccountName="Example")
     new_account_id = resp["CreateAccountStatus"]["AccountId"]
@@ -22,7 +22,7 @@ def _add_member_account(session: Session) -> AccountTypeDef:
     return member
 
 
-def _add_unit(session: Session, parent_id: str) -> OrganizationalUnitTypeDef:
+def _create_unit(session: Session, parent_id: str) -> OrganizationalUnitTypeDef:
     org = session.client("organizations")
     resp = org.create_organizational_unit(ParentId=parent_id, Name="Example")
     unit = cast(OrganizationalUnitTypeDef, resp["OrganizationalUnit"])
@@ -82,7 +82,7 @@ class Test_when_org_has_one_member:
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
         _create_org(session)
-        self.member = _add_member_account(session)
+        self.member = _create_member(session)
 
     def test_graph_contains_member(self, session: Session):
         g = build_org_graph(session)
@@ -100,7 +100,7 @@ class Test_when_org_has_empty_unit:
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
         _create_org(session)
-        self.unit = _add_unit(session, parent_id=ROOT_ID)
+        self.unit = _create_unit(session, parent_id=ROOT_ID)
 
     def test_graph_contains_unit(self, session: Session):
         g = build_org_graph(session)
