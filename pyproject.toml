@@ -15,6 +15,7 @@ logdecorator = "^2.2"
 boto-collator-client = "^0.1.1"
 networkx = "^2.8"
 matplotlib = "^3.5.1"
+boto3-stubs = {extras = ["organizations"], version = "^1.21.42"}
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.28.0"
