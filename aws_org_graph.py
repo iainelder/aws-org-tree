@@ -1,5 +1,5 @@
 from boto3 import Session
-from networkx import Graph
+from networkx import Graph, freeze
 from queue import SimpleQueue
 
 def build_org_graph(session: Session) -> Graph:
@@ -15,7 +15,7 @@ def build_org_graph(session: Session) -> Graph:
         unit_queue.put(root)
     
     while not unit_queue.empty():
-        parent = unit_queue.get(block=False)
+        parent = unit_queue.get()
         g.add_node(parent["Id"])
 
         child_accounts = org.list_accounts_for_parent(ParentId=parent["Id"])["Accounts"]
@@ -27,4 +27,4 @@ def build_org_graph(session: Session) -> Graph:
             g.add_edge(parent["Id"], unit["Id"])
             unit_queue.put(unit)
 
-    return g
+    return freeze(g)

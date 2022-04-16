@@ -14,11 +14,14 @@ def _create_org(session: Session) -> None:
     org.create_organization(FeatureSet="ALL")
 
 
-def _create_member(session: Session) -> AccountTypeDef:
+def _create_member(session: Session, parent_id: str) -> AccountTypeDef:
     org = session.client("organizations")
     resp = org.create_account(Email="account@example.com", AccountName="Example")
     new_account_id = resp["CreateAccountStatus"]["AccountId"]
     member = org.describe_account(AccountId=new_account_id)["Account"]
+    org.move_account(
+        AccountId=member["Id"], SourceParentId=ROOT_ID, DestinationParentId=parent_id
+    )
     return member
 
 
@@ -51,12 +54,21 @@ def session(mocker: MockerFixture) -> Iterator[Session]:
         yield Session()
 
 
-def test_when_no_org_exists_returns_empty_graph(session: Session):
-    g = build_org_graph(session)
-    assert len(g) == 0
+class Postconditions:
+
+    def test_graph_is_frozen(self, session: Session):
+        g = build_org_graph(session)
+        assert nx.is_frozen(g)
 
 
-class Test_when_org_is_new:
+class Test_when_no_org_exists(Postconditions):
+
+    def test_graph_is_empty(self, session: Session):
+        g = build_org_graph(session)
+        assert len(g) == 0
+
+
+class Test_when_org_is_new(Postconditions):
 
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
@@ -75,14 +87,14 @@ class Test_when_org_is_new:
         assert (ROOT_ID, MANAGEMENT_ACCOUNT_ID) in g.edges
 
 
-class Test_when_org_has_one_member:
+class Test_when_org_has_one_member(Test_when_org_is_new):
 
     member: AccountTypeDef
 
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
         _create_org(session)
-        self.member = _create_member(session)
+        self.member = _create_member(session, parent_id=ROOT_ID)
 
     def test_graph_contains_member(self, session: Session):
         g = build_org_graph(session)
@@ -93,7 +105,7 @@ class Test_when_org_has_one_member:
         assert (ROOT_ID, self.member["Id"]) in g.edges
 
 
-class Test_when_org_has_empty_unit:
+class Test_when_org_has_empty_unit(Test_when_org_is_new):
 
     unit: OrganizationalUnitTypeDef
 
@@ -109,3 +121,23 @@ class Test_when_org_has_empty_unit:
     def test_graph_has_edge_from_unit_to_root(self, session: Session):
         g = build_org_graph(session)
         assert (ROOT_ID, self.unit["Id"]) in g.edges
+
+
+class Test_when_org_has_member_in_unit(Test_when_org_has_empty_unit):
+
+    unit: OrganizationalUnitTypeDef
+    member: AccountTypeDef
+
+    @fixture(autouse=True)
+    def org(self, session: Session) -> None:
+        _create_org(session)
+        self.unit = _create_unit(session, parent_id=ROOT_ID)
+        self.member = _create_member(session, parent_id=self.unit["Id"])
+
+    def test_graph_contains_member(self, session: Session):
+        g = build_org_graph(session)
+        assert self.member["Id"] in g
+
+    def test_graph_has_edge_from_unit_to_member(self, session: Session):
+        g = build_org_graph(session)
+        assert (self.unit["Id"], self.member["Id"]) in g.edges
