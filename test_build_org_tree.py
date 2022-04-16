@@ -1,12 +1,11 @@
-from typing import cast, Iterator, Final
+from conftest import ROOT_ID
+from typing import cast, List, Final
 from boto3 import Session
-from moto import mock_organizations, mock_sts, organizations
-from pytest import fixture
+from moto.organizations.utils import MASTER_ACCOUNT_ID
+from pytest import fixture, mark
 from aws_org_graph import build_org_graph
 import networkx as nx
-from pytest_mock import MockerFixture
-from mypy_boto3_organizations.type_defs import AccountTypeDef
-from mypy_boto3_organizations.type_defs import OrganizationalUnitTypeDef
+from mypy_boto3_organizations.type_defs import AccountTypeDef, OrganizationalUnitTypeDef
 
 
 def _create_org(session: Session) -> None:
@@ -31,9 +30,7 @@ def _create_unit(session: Session, parent_id: str) -> OrganizationalUnitTypeDef:
     unit = cast(OrganizationalUnitTypeDef, resp["OrganizationalUnit"])
     return unit
 
-
-ROOT_ID: Final = "r-0001"
-MANAGEMENT_ACCOUNT_ID: Final = organizations.utils.MASTER_ACCOUNT_ID
+MANAGEMENT_ACCOUNT_ID: Final = MASTER_ACCOUNT_ID
 
 def draw(g: nx.Graph):
     """Draw the graph in the Pytest debugger."""
@@ -42,23 +39,24 @@ def draw(g: nx.Graph):
     plt.show()
 
 
-@fixture
-def session(mocker: MockerFixture) -> Iterator[Session]:
-
-    mocker.patch(
-        "moto.organizations.utils.make_random_root_id",
-        lambda: ROOT_ID
-    )
-
-    with mock_sts(), mock_organizations():
-        yield Session()
-
-
+@mark.usefixtures("paginated_moto")
 class Postconditions:
 
     def test_graph_is_frozen(self, session: Session):
         g = build_org_graph(session)
         assert nx.is_frozen(g)
+
+
+class NonEmptyPostconditions(Postconditions):
+
+    @mark.usefixtures("known_root_id")
+    def test_graph_has_root(self, session: Session):
+        g = build_org_graph(session)
+        assert ROOT_ID in g
+
+    def test_graph_has_management_account(self, session: Session):
+        g = build_org_graph(session)
+        assert MANAGEMENT_ACCOUNT_ID in g
 
 
 class Test_when_no_org_exists(Postconditions):
@@ -68,26 +66,18 @@ class Test_when_no_org_exists(Postconditions):
         assert len(g) == 0
 
 
-class Test_when_org_is_new(Postconditions):
+class Test_when_org_is_new(NonEmptyPostconditions):
 
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
         _create_org(session)
-
-    def test_graph_has_root(self, session: Session):
-        g = build_org_graph(session)
-        assert ROOT_ID in g
-
-    def test_graph_has_management_account(self, session: Session):
-        g = build_org_graph(session)
-        assert MANAGEMENT_ACCOUNT_ID in g
 
     def test_graph_has_edge_between_root_and_management_account(self, session: Session):
         g = build_org_graph(session)
         assert (ROOT_ID, MANAGEMENT_ACCOUNT_ID) in g.edges
 
 
-class Test_when_org_has_one_member(Test_when_org_is_new):
+class Test_when_org_has_one_member(NonEmptyPostconditions):
 
     member: AccountTypeDef
 
@@ -105,7 +95,7 @@ class Test_when_org_has_one_member(Test_when_org_is_new):
         assert (ROOT_ID, self.member["Id"]) in g.edges
 
 
-class Test_when_org_has_empty_unit(Test_when_org_is_new):
+class Test_when_org_has_empty_unit(NonEmptyPostconditions):
 
     unit: OrganizationalUnitTypeDef
 
@@ -123,7 +113,7 @@ class Test_when_org_has_empty_unit(Test_when_org_is_new):
         assert (ROOT_ID, self.unit["Id"]) in g.edges
 
 
-class Test_when_org_has_member_in_unit(Test_when_org_has_empty_unit):
+class Test_when_org_has_member_in_unit(NonEmptyPostconditions):
 
     unit: OrganizationalUnitTypeDef
     member: AccountTypeDef
@@ -141,3 +131,21 @@ class Test_when_org_has_member_in_unit(Test_when_org_has_empty_unit):
     def test_graph_has_edge_from_unit_to_member(self, session: Session):
         g = build_org_graph(session)
         assert (self.unit["Id"], self.member["Id"]) in g.edges
+
+
+class Test_when_org_has_20_root_members(NonEmptyPostconditions):
+    """The Organizations APIs return pages of 20 accounts. Including the
+    management account there will be 21 accounts in the root OU. The
+    implementation needs to iterate the pages."""
+
+    members: List[AccountTypeDef]
+
+    @fixture(autouse=True)
+    def org(self, session: Session) -> None:
+        _create_org(session)
+        self.members = [_create_member(session, ROOT_ID) for i in range(20)]
+
+    def test_graph_has_all_members(self, session):
+        g = build_org_graph(session)
+        for m in self.members:
+            assert m["Id"] in g
