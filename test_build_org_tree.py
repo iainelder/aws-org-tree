@@ -2,7 +2,7 @@ from typing import Iterator, Final
 from boto3 import Session
 from moto import mock_organizations, mock_sts, organizations
 from pytest import fixture, raises, mark, fail
-from aws_org_tree import build_org_graph
+from aws_org_graph import build_org_graph
 import networkx as nx
 from pytest_mock import MockerFixture
 
