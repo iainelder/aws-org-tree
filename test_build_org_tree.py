@@ -42,18 +42,16 @@ def test_when_no_org_exists_returns_empty_graph(session: Session):
 
 
 @mark.usefixtures("new_org")
-def test_when_org_is_new_graph_has_root(session: Session):
-    g = build_org_graph(session)
-    assert ROOT_ID in g
+class Test_When_org_is_new:
 
+    def test_graph_has_root(self, session: Session):
+        g = build_org_graph(session)
+        assert ROOT_ID in g
 
-@mark.usefixtures("new_org")
-def test_when_org_is_new_graph_has_management_account(session: Session):
-    g = build_org_graph(session)
-    assert MANAGEMENT_ACCOUNT_ID in g
+    def test_graph_has_management_account(self, session: Session):
+        g = build_org_graph(session)
+        assert MANAGEMENT_ACCOUNT_ID in g
 
-
-@mark.usefixtures("new_org")
-def test_when_org_is_new_graph_has_edge_between_root_and_management_account(session: Session):
-    g = build_org_graph(session)
-    assert (ROOT_ID, MANAGEMENT_ACCOUNT_ID) in g.edges
+    def test_graph_has_edge_between_root_and_management_account(self, session: Session):
+        g = build_org_graph(session)
+        assert (ROOT_ID, MANAGEMENT_ACCOUNT_ID) in g.edges
