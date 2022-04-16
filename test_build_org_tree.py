@@ -52,9 +52,8 @@ def session(mocker: MockerFixture) -> Iterator[Session]:
 
 
 def test_when_no_org_exists_returns_empty_graph(session: Session):
-    empty = nx.Graph()
     g = build_org_graph(session)
-    assert nx.utils.graphs_equal(empty, g)
+    assert len(g) == 0
 
 
 class Test_when_org_is_new:
