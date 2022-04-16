@@ -25,7 +25,7 @@ def test_without_pagination_list_returns_2_accounts(session: Session):
     assert len(accounts) == 2
 
 
-@mark.usefixtures("paginated_moto")
+@mark.usefixtures("paginated_accounts")
 def test_with_pagination_list_returns_1_account(session: Session):
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
@@ -33,7 +33,7 @@ def test_with_pagination_list_returns_1_account(session: Session):
     assert len(accounts) == 1
 
 
-@mark.usefixtures("paginated_moto")
+@mark.usefixtures("paginated_accounts")
 def test_with_pagination_list_paginator_first_page_has_1_account(session: Session):
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
@@ -43,7 +43,7 @@ def test_with_pagination_list_paginator_first_page_has_1_account(session: Sessio
     assert len(accounts) == 1
 
 
-@mark.usefixtures("paginated_moto")
+@mark.usefixtures("paginated_accounts")
 def test_with_pagination_list_paginator_all_pages_have_1_account(session: Session):
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]

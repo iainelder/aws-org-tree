@@ -30,6 +30,7 @@ def _create_unit(session: Session, parent_id: str) -> OrganizationalUnitTypeDef:
     unit = cast(OrganizationalUnitTypeDef, resp["OrganizationalUnit"])
     return unit
 
+
 MANAGEMENT_ACCOUNT_ID: Final = MASTER_ACCOUNT_ID
 
 def draw(g: nx.Graph):
@@ -39,7 +40,7 @@ def draw(g: nx.Graph):
     plt.show()
 
 
-@mark.usefixtures("paginated_moto")
+@mark.usefixtures("paginated_accounts", "paginated_units")
 class Postconditions:
 
     def test_graph_is_frozen(self, session: Session):
@@ -133,7 +134,7 @@ class Test_when_org_has_member_in_unit(NonEmptyPostconditions):
         assert (self.unit["Id"], self.member["Id"]) in g.edges
 
 
-class Test_when_org_has_20_root_members(NonEmptyPostconditions):
+class Test_when_org_has_20_members_in_root(NonEmptyPostconditions):
     """The Organizations APIs return pages of 20 accounts. Including the
     management account there will be 21 accounts in the root OU. The
     implementation needs to iterate the pages."""
@@ -143,9 +144,27 @@ class Test_when_org_has_20_root_members(NonEmptyPostconditions):
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
         _create_org(session)
-        self.members = [_create_member(session, ROOT_ID) for i in range(20)]
+        self.members = [_create_member(session, ROOT_ID) for _ in range(20)]
 
     def test_graph_has_all_members(self, session):
         g = build_org_graph(session)
         for m in self.members:
             assert m["Id"] in g
+
+
+class Test_when_org_has_20_units_in_root(NonEmptyPostconditions):
+    """The Organizations APIs return pages of 20 accounts. Including the
+    management account there will be 21 accounts in the root OU. The
+    implementation needs to iterate the pages."""
+
+    members: List[OrganizationalUnitTypeDef]
+
+    @fixture(autouse=True)
+    def org(self, session: Session) -> None:
+        _create_org(session)
+        self.units = [_create_unit(session, ROOT_ID) for _ in range(20)]
+
+    def test_graph_has_all_members(self, session):
+        g = build_org_graph(session)
+        for u in self.units:
+            assert u["Id"] in g

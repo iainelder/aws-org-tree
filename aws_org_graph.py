@@ -24,7 +24,7 @@ def build_org_graph(session: Session) -> Graph:
         for ac in child_accounts:
             g.add_edge(parent["Id"], ac["Id"])
 
-        child_units = org.list_organizational_units_for_parent(ParentId=parent["Id"])["OrganizationalUnits"]
+        child_units = _iter_units(session, parent["Id"])
         for unit in child_units:
             g.add_edge(parent["Id"], unit["Id"])
             unit_queue.put(unit)
@@ -38,3 +38,11 @@ def _iter_accounts(session: Session, parent_id: str) -> Iterable[AccountTypeDef]
     for page in paginator.paginate(ParentId=parent_id):
         for account in page["Accounts"]:
             yield account
+
+
+def _iter_units(session: Session, parent_id: str) -> Iterable[AccountTypeDef]:
+    org = session.client("organizations")
+    paginator = org.get_paginator("list_organizational_units_for_parent")
+    for page in paginator.paginate(ParentId=parent_id):
+        for unit in page["OrganizationalUnits"]:
+            yield unit
