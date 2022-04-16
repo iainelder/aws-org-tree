@@ -1,4 +1,4 @@
-from typing import Final, List
+from typing import List
 
 import matplotlib.pyplot as plt  # type: ignore[import]
 import networkx as nx  # type: ignore[import]
@@ -33,9 +33,6 @@ def _create_unit(session: Session, parent_id: str) -> OrganizationalUnitTypeDef:
     return resp["OrganizationalUnit"]
 
 
-MANAGEMENT_ACCOUNT_ID: Final = MASTER_ACCOUNT_ID
-
-
 def draw(g: nx.Graph) -> None:
     """Draw the graph in the Pytest debugger."""
     nx.draw(g, with_labels=True)
@@ -57,7 +54,7 @@ class NonEmptyPostconditions(Postconditions):
 
     def test_graph_has_management_account(self, session: Session) -> None:
         g = build_org_graph(session)
-        assert MANAGEMENT_ACCOUNT_ID in g
+        assert MASTER_ACCOUNT_ID in g
 
 
 class Test_when_no_org_exists(Postconditions):
@@ -75,7 +72,7 @@ class Test_when_org_is_new(NonEmptyPostconditions):
         self, session: Session
     ) -> None:
         g = build_org_graph(session)
-        assert (ROOT_ID, MANAGEMENT_ACCOUNT_ID) in g.edges
+        assert (ROOT_ID, MASTER_ACCOUNT_ID) in g.edges
 
 
 class Test_when_org_has_one_member(NonEmptyPostconditions):
