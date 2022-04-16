@@ -14,8 +14,7 @@ def build_org_graph(session: Session) -> Graph:
     org = session.client("organizations")
     resp = org.list_roots()
 
-    if resp["Roots"]:
-        root = resp["Roots"][0]
+    for root in resp["Roots"]:
         unit_queue.put(root)
 
     while not unit_queue.empty():
