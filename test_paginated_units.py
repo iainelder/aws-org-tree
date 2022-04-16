@@ -14,13 +14,13 @@ def _create_unit(session: Session) -> None:
 
 
 @fixture(autouse=True)
-def org(session: Session):
+def org(session: Session) -> None:
     _create_org(session)
     _create_unit(session)
     _create_unit(session)
 
 
-def test_without_pagination_list_returns_2_units(session: Session):
+def test_without_pagination_list_returns_2_units(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
     units= org.list_organizational_units_for_parent(ParentId=root_id)["OrganizationalUnits"]
@@ -28,7 +28,7 @@ def test_without_pagination_list_returns_2_units(session: Session):
 
 
 @mark.usefixtures("paginated_units")
-def test_with_pagination_list_returns_1_unit(session: Session):
+def test_with_pagination_list_returns_1_unit(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
     units= org.list_organizational_units_for_parent(ParentId=root_id)["OrganizationalUnits"]
@@ -36,7 +36,7 @@ def test_with_pagination_list_returns_1_unit(session: Session):
 
 
 @mark.usefixtures("paginated_units")
-def test_with_pagination_list_paginator_first_page_has_1_unit(session: Session):
+def test_with_pagination_list_paginator_first_page_has_1_unit(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
 
@@ -46,7 +46,7 @@ def test_with_pagination_list_paginator_first_page_has_1_unit(session: Session):
 
 
 @mark.usefixtures("paginated_units")
-def test_with_pagination_list_paginator_all_pages_have_1_unit(session: Session):
+def test_with_pagination_list_paginator_all_pages_have_1_unit(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
 

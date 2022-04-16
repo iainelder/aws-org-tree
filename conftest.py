@@ -1,10 +1,11 @@
+from typing import Any
 from boto3 import Session
 import json
 from typing import Final, Iterator
 from pytest import fixture
 from pytest_mock import MockerFixture
-from moto.utilities.paginator import paginate
-from moto import mock_organizations
+from moto.utilities.paginator import paginate  # type: ignore[import]
+from moto import mock_organizations  # type: ignore[import]
 
 
 ROOT_ID: Final = "r-0001"
@@ -26,7 +27,7 @@ def session() -> Iterator[Session]:
 
 
 @fixture()
-def paginated_accounts(mocker: MockerFixture) -> Iterator[None]:
+def paginated_accounts(mocker: MockerFixture) -> None:
 
     model = {
         "list_accounts_for_parent": {
@@ -38,8 +39,8 @@ def paginated_accounts(mocker: MockerFixture) -> Iterator[None]:
         }
     }
 
-    @paginate(pagination_model=model)
-    def list_accounts_for_parent(self, **kwargs):
+    @paginate(pagination_model=model)  # type: ignore[misc]
+    def list_accounts_for_parent(self: Any, **kwargs: Any) -> Any:
         parent_id = self.validate_parent_id(kwargs["ParentId"])
         return [
             account.describe()
@@ -47,7 +48,7 @@ def paginated_accounts(mocker: MockerFixture) -> Iterator[None]:
             if account.parent_id == parent_id
         ]
     
-    def response_list_accounts_for_parent(self):
+    def response_list_accounts_for_parent(self: Any) -> Any:
         max_results = self._get_int_param("MaxResults")
         next_token = self._get_param("NextToken")
         parent_id = self._get_param("ParentId")
@@ -73,7 +74,7 @@ def paginated_accounts(mocker: MockerFixture) -> Iterator[None]:
 
 
 @fixture()
-def paginated_units(mocker: MockerFixture) -> Iterator[None]:
+def paginated_units(mocker: MockerFixture) -> None:
 
     model = {
         "list_organizational_units_for_parent": {
@@ -85,8 +86,8 @@ def paginated_units(mocker: MockerFixture) -> Iterator[None]:
         }
     }
 
-    @paginate(pagination_model=model)
-    def list_organizational_units_for_parent(self, **kwargs):
+    @paginate(pagination_model=model)  # type: ignore[misc]
+    def list_organizational_units_for_parent(self: Any, **kwargs: Any) -> Any:
         parent_id = self.validate_parent_id(kwargs["ParentId"])
         return [
             {"Id": ou.id, "Arn": ou.arn, "Name": ou.name}
@@ -94,7 +95,7 @@ def paginated_units(mocker: MockerFixture) -> Iterator[None]:
             if ou.parent_id == parent_id
         ]
 
-    def response_list_organizational_units_for_parent(self):
+    def response_list_organizational_units_for_parent(self: Any) -> Any:
         max_results = self._get_int_param("MaxResults")
         next_token = self._get_param("NextToken")
         parent_id = self._get_param("ParentId")

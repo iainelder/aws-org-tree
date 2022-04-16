@@ -1,3 +1,5 @@
+# type: ignore
+
 import json
 import boto3
 from boto_collator_client import CollatorClient

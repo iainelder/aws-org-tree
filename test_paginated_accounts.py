@@ -13,12 +13,12 @@ def _create_member(session: Session) -> None:
 
 
 @fixture(autouse=True)
-def org(session: Session):
+def org(session: Session) -> None:
     _create_org(session)
     _create_member(session)
 
 
-def test_without_pagination_list_returns_2_accounts(session: Session):
+def test_without_pagination_list_returns_2_accounts(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
     accounts = org.list_accounts_for_parent(ParentId=root_id)["Accounts"]
@@ -26,7 +26,7 @@ def test_without_pagination_list_returns_2_accounts(session: Session):
 
 
 @mark.usefixtures("paginated_accounts")
-def test_with_pagination_list_returns_1_account(session: Session):
+def test_with_pagination_list_returns_1_account(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
     accounts = org.list_accounts_for_parent(ParentId=root_id)["Accounts"]
@@ -34,7 +34,7 @@ def test_with_pagination_list_returns_1_account(session: Session):
 
 
 @mark.usefixtures("paginated_accounts")
-def test_with_pagination_list_paginator_first_page_has_1_account(session: Session):
+def test_with_pagination_list_paginator_first_page_has_1_account(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
 
@@ -44,7 +44,7 @@ def test_with_pagination_list_paginator_first_page_has_1_account(session: Sessio
 
 
 @mark.usefixtures("paginated_accounts")
-def test_with_pagination_list_paginator_all_pages_have_1_account(session: Session):
+def test_with_pagination_list_paginator_all_pages_have_1_account(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
 

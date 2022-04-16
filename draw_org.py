@@ -1,7 +1,7 @@
 from aws_org_graph import build_org_graph
 from boto3 import Session
-import networkx as nx
-import matplotlib.pyplot as plt
+import networkx as nx  # type: ignore[import]
+import matplotlib.pyplot as plt  # type: ignore[import]
 
 def main() -> None:
     session = Session()
