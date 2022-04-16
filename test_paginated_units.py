@@ -23,7 +23,9 @@ def org(session: Session) -> None:
 def test_without_pagination_list_returns_2_units(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
-    units= org.list_organizational_units_for_parent(ParentId=root_id)["OrganizationalUnits"]
+    units = org.list_organizational_units_for_parent(ParentId=root_id)[
+        "OrganizationalUnits"
+    ]
     assert len(units) == 2
 
 
@@ -31,7 +33,9 @@ def test_without_pagination_list_returns_2_units(session: Session) -> None:
 def test_with_pagination_list_returns_1_unit(session: Session) -> None:
     org = session.client("organizations")
     root_id = org.list_roots()["Roots"][0]["Id"]
-    units= org.list_organizational_units_for_parent(ParentId=root_id)["OrganizationalUnits"]
+    units = org.list_organizational_units_for_parent(ParentId=root_id)[
+        "OrganizationalUnits"
+    ]
     assert len(units) == 1
 
 

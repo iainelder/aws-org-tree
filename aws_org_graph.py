@@ -1,8 +1,10 @@
-from typing import Iterable
-from mypy_boto3_organizations.type_defs import AccountTypeDef, OrganizationalUnitTypeDef
-from boto3 import Session
-from networkx import Graph, freeze  # type: ignore[import]
 from queue import SimpleQueue
+from typing import Iterable
+
+from boto3 import Session
+from mypy_boto3_organizations.type_defs import AccountTypeDef, OrganizationalUnitTypeDef
+from networkx import Graph, freeze  # type: ignore[import]
+
 
 def build_org_graph(session: Session) -> Graph:
 
@@ -15,7 +17,7 @@ def build_org_graph(session: Session) -> Graph:
     if resp["Roots"]:
         root = resp["Roots"][0]
         unit_queue.put(root)
-    
+
     while not unit_queue.empty():
         parent = unit_queue.get()
         g.add_node(parent["Id"])
@@ -40,7 +42,9 @@ def _iter_accounts(session: Session, parent_id: str) -> Iterable[AccountTypeDef]
             yield account
 
 
-def _iter_units(session: Session, parent_id: str) -> Iterable[OrganizationalUnitTypeDef]:
+def _iter_units(
+    session: Session, parent_id: str
+) -> Iterable[OrganizationalUnitTypeDef]:
     org = session.client("organizations")
     paginator = org.get_paginator("list_organizational_units_for_parent")
     for page in paginator.paginate(ParentId=parent_id):

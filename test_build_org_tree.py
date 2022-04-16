@@ -1,12 +1,14 @@
-from conftest import ROOT_ID
-from typing import cast, List, Final
+from typing import Final, List
+
+import matplotlib.pyplot as plt  # type: ignore[import]
+import networkx as nx  # type: ignore[import]
 from boto3 import Session
 from moto.organizations.utils import MASTER_ACCOUNT_ID  # type: ignore[import]
-from pytest import fixture, mark
-from aws_org_graph import build_org_graph
-import networkx as nx  # type: ignore[import]
-import matplotlib.pyplot as plt  # type: ignore[import]
 from mypy_boto3_organizations.type_defs import AccountTypeDef, OrganizationalUnitTypeDef
+from pytest import fixture, mark
+
+from aws_org_graph import build_org_graph
+from conftest import ROOT_ID
 
 
 def _create_org(session: Session) -> None:
@@ -33,6 +35,7 @@ def _create_unit(session: Session, parent_id: str) -> OrganizationalUnitTypeDef:
 
 MANAGEMENT_ACCOUNT_ID: Final = MASTER_ACCOUNT_ID
 
+
 def draw(g: nx.Graph) -> None:
     """Draw the graph in the Pytest debugger."""
     nx.draw(g, with_labels=True)
@@ -41,14 +44,12 @@ def draw(g: nx.Graph) -> None:
 
 @mark.usefixtures("paginated_accounts", "paginated_units")
 class Postconditions:
-
     def test_graph_is_frozen(self, session: Session) -> None:
         g = build_org_graph(session)
         assert nx.is_frozen(g)
 
 
 class NonEmptyPostconditions(Postconditions):
-
     @mark.usefixtures("known_root_id")
     def test_graph_has_root(self, session: Session) -> None:
         g = build_org_graph(session)
@@ -60,19 +61,19 @@ class NonEmptyPostconditions(Postconditions):
 
 
 class Test_when_no_org_exists(Postconditions):
-
     def test_graph_is_empty(self, session: Session) -> None:
         g = build_org_graph(session)
         assert len(g) == 0
 
 
 class Test_when_org_is_new(NonEmptyPostconditions):
-
     @fixture(autouse=True)
     def org(self, session: Session) -> None:
         _create_org(session)
 
-    def test_graph_has_edge_between_root_and_management_account(self, session: Session) -> None:
+    def test_graph_has_edge_between_root_and_management_account(
+        self, session: Session
+    ) -> None:
         g = build_org_graph(session)
         assert (ROOT_ID, MANAGEMENT_ACCOUNT_ID) in g.edges
 
@@ -167,4 +168,3 @@ class Test_when_org_has_20_units_in_root(NonEmptyPostconditions):
         g = build_org_graph(session)
         for u in self.units:
             assert u["Id"] in g
- 

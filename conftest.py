@@ -1,12 +1,11 @@
-from typing import Any
-from boto3 import Session
 import json
-from typing import Final, Iterator
+from typing import Any, Final, Iterator
+
+from boto3 import Session
+from moto import mock_organizations  # type: ignore[import]
+from moto.utilities.paginator import paginate  # type: ignore[import]
 from pytest import fixture
 from pytest_mock import MockerFixture
-from moto.utilities.paginator import paginate  # type: ignore[import]
-from moto import mock_organizations  # type: ignore[import]
-
 
 ROOT_ID: Final = "r-0001"
 
@@ -14,10 +13,7 @@ ROOT_ID: Final = "r-0001"
 @fixture(autouse=True)
 def known_root_id(mocker: MockerFixture) -> None:
 
-    mocker.patch(
-        "moto.organizations.utils.make_random_root_id",
-        lambda: ROOT_ID
-    )
+    mocker.patch("moto.organizations.utils.make_random_root_id", lambda: ROOT_ID)
 
 
 @fixture()
@@ -47,7 +43,7 @@ def paginated_accounts(mocker: MockerFixture) -> None:
             for account in self.accounts
             if account.parent_id == parent_id
         ]
-    
+
     def response_list_accounts_for_parent(self: Any) -> Any:
         max_results = self._get_int_param("MaxResults")
         next_token = self._get_param("NextToken")
@@ -65,11 +61,11 @@ def paginated_accounts(mocker: MockerFixture) -> None:
     # The mock name must match the key in the pagination model.
     mocker.patch(
         "moto.organizations.models.OrganizationsBackend.list_accounts_for_parent",
-        list_accounts_for_parent
+        list_accounts_for_parent,
     )
     mocker.patch(
         "moto.organizations.responses.OrganizationsResponse.list_accounts_for_parent",
-        response_list_accounts_for_parent
+        response_list_accounts_for_parent,
     )
 
 
@@ -99,7 +95,10 @@ def paginated_units(mocker: MockerFixture) -> None:
         max_results = self._get_int_param("MaxResults")
         next_token = self._get_param("NextToken")
         parent_id = self._get_param("ParentId")
-        units, next_token = self.organizations_backend.list_organizational_units_for_parent(
+        (
+            units,
+            next_token,
+        ) = self.organizations_backend.list_organizational_units_for_parent(
             max_results=max_results, next_token=next_token, ParentId=parent_id
         )
         response = {"OrganizationalUnits": units}
@@ -112,9 +111,9 @@ def paginated_units(mocker: MockerFixture) -> None:
     # The mock name must match the key in the pagination model.
     mocker.patch(
         "moto.organizations.models.OrganizationsBackend.list_organizational_units_for_parent",
-        list_organizational_units_for_parent
+        list_organizational_units_for_parent,
     )
     mocker.patch(
         "moto.organizations.responses.OrganizationsResponse.list_organizational_units_for_parent",
-        response_list_organizational_units_for_parent
+        response_list_organizational_units_for_parent,
     )
