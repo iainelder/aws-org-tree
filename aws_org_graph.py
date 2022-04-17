@@ -2,11 +2,9 @@ from queue import SimpleQueue
 from typing import Iterable, Protocol
 
 from boto3 import Session
-from mypy_boto3_organizations.type_defs import (
-    AccountTypeDef as Account,
-    OrganizationalUnitTypeDef as OrgUnit,
-    RootTypeDef as Root,
-)
+from mypy_boto3_organizations.type_defs import AccountTypeDef as Account
+from mypy_boto3_organizations.type_defs import OrganizationalUnitTypeDef as OrgUnit
+from mypy_boto3_organizations.type_defs import RootTypeDef as Root
 from networkx import Graph, freeze  # type: ignore[import]
 
 
