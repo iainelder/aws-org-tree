@@ -11,8 +11,6 @@ import boto3
 import logdecorator
 from anytree import LevelOrderIter
 
-__VERSION__ = "0.2.0"
-
 logger = None
 
 
