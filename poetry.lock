@@ -80,18 +80,6 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
-name = "boto-collator-client"
-version = "0.1.1"
-description = "A boto3 client wrapper that collates each paginated API call into a single result"
-category = "main"
-optional = false
-python-versions = ">=3.6,<4.0"
-files = [
-    {file = "boto-collator-client-0.1.1.tar.gz", hash = "sha256:010b9ff460611dab8721768a5ebacc156e65737621f5a29f93ec6006f2d11579"},
-    {file = "boto_collator_client-0.1.1-py3-none-any.whl", hash = "sha256:ae5993abd4c458f3d15d848c79bc0204d9c8f2432939eb49928478313ead5c9d"},
-]
-
-[[package]]
 name = "boto3"
 version = "1.26.150"
 description = "The AWS SDK for Python"
@@ -2079,4 +2067,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4"
-content-hash = "705ca5b4038ca1eeedd4d9f93b4c2bdb3fd8f1a7b556e90fa32a353c572ede35"
+content-hash = "0a07659c607a0dcf127e42f032e7aecaf9e39b72376279fec20e1e446b9b572d"

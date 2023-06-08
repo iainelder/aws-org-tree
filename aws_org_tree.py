@@ -10,7 +10,6 @@ import anytree.exporter
 import boto3
 import logdecorator
 from anytree import LevelOrderIter
-from boto_collator_client import CollatorClient
 
 __VERSION__ = "0.2.0"
 
@@ -144,20 +143,30 @@ class OrgTree(object):
     )
     def _get_children(self, parent_id, child_type):
 
-        orgs = CollatorClient(self._orgs)
+        if child_type == "ACCOUNT":
+            return self._list_accounts_for_parent(parent_id)
+        if child_type == "ORGANIZATIONAL_UNIT":
+            return self._list_organizational_units_for_parent(parent_id)
 
-        children = orgs.list_children(ParentId=parent_id, ChildType=child_type)[
-            "Children"
+    def _list_accounts_for_parent(self, parent_id):
+        pages = self._orgs.get_paginator("list_accounts_for_parent").paginate(
+            ParentId=parent_id
+        )
+        return [
+            {**{"Type": "ACCOUNT"}, **account}
+            for page in pages
+            for account in page["Accounts"]
         ]
 
-        details = {
-            "ACCOUNT": orgs.list_accounts_for_parent(ParentId=parent_id)["Accounts"],
-            "ORGANIZATIONAL_UNIT": orgs.list_organizational_units_for_parent(
-                ParentId=parent_id
-            )["OrganizationalUnits"],
-        }[child_type]
-
-        return [{**c, **d} for c, d in zip(children, details)]
+    def _list_organizational_units_for_parent(self, parent_id):
+        pages = self._orgs.get_paginator(
+            "list_organizational_units_for_parent"
+        ).paginate(ParentId=parent_id)
+        return [
+            {**{"Type": "ORGANIZATIONAL_UNIT"}, **account}
+            for page in pages
+            for account in page["OrganizationalUnits"]
+        ]
 
 
 class ISODateJSONEncoder(json.JSONEncoder):
