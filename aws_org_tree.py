@@ -4,6 +4,8 @@ import datetime
 import json
 import logging
 import sys
+from argparse import ArgumentParser, Namespace
+from typing import Protocol
 
 import anytree
 import anytree.exporter
@@ -13,20 +15,37 @@ from anytree import LevelOrderIter
 
 logger = None
 
+class OrgTreeArgParser(ArgumentParser):
+    def __init__(self):
+        super().__init__()
+        self.add_argument(
+            "--tree-format",
+            default="text-tree",
+            choices=["json-flat", "json-tree", "text-tree"]
+        )
+        self.add_argument(
+            "--node-name-format", default="{Id}"
+        )
+
+
+class OrgTreeArgs(Namespace):
+    tree_format: str
+    node_name_format: str
+
 
 def main():
 
     configure_logging()
 
-    format = "text-tree" if len(sys.argv) == 1 else sys.argv[1]
+    args = OrgTreeArgParser().parse_args(namespace=OrgTreeArgs())
 
-    formatter = {
-        "json-flat": export_org_flat,
-        "json-tree": export_org_tree,
-        "text-tree": render_org,
-    }[format]
+    formatter: Formatter = {
+        "json-flat": JsonFlatExporter(),
+        "json-tree": JsonTreeExporter(),
+        "text-tree": TreeRenderer(args.node_name_format),
+    }[args.tree_format]
 
-    print(formatter())
+    print(formatter.render(OrgTree().build()))
 
 
 def configure_logging():
@@ -42,22 +61,6 @@ def configure_logging():
     # FIXME: Where is a better place for this?
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-
-
-def export_org_tree():
-
-    return OrgTree().build().to_json()
-
-
-def export_org_flat():
-
-    return OrgTree().build().to_flat_json()
-
-
-def render_org():
-    r = OrgTree().build().render()
-
-    return "".join([f"{pre}{node.name}\n" for pre, _, node in r])
 
 
 class OrgTree(object):
@@ -172,3 +175,30 @@ class ISODateJSONEncoder(json.JSONEncoder):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
         return super(self).default(obj)
+
+
+class Formatter(Protocol):
+    def render(self, org_tree):
+        ...
+
+
+class JsonFlatExporter:
+    def render(self, org_tree):
+        return org_tree.to_json()
+
+
+class JsonTreeExporter:
+    def render(self, org_tree):
+        return org_tree.to_flat_json()
+
+
+class TreeRenderer:
+    def __init__(self, node_name_format):
+        self.node_name_format = node_name_format
+
+    def render(self, org_tree):
+        r = org_tree.render()
+        return "".join([f"{pre}{self._format_name(node)}\n" for pre, _, node in r])
+
+    def _format_name(self, node):
+        return self.node_name_format.format_map(node.Properties)
