@@ -31,7 +31,7 @@ class OrgTreeArgParser(ArgumentParser):
             default="text-tree",
             choices=["json-flat", "json-tree", "text-tree"],
         )
-        self.add_argument("--node-name-format", default="{Id}")
+        self.add_argument("--node-name-format", default="{Name} ({Id})")
         self.add_argument("--log-level", default="WARNING")
 
 
@@ -206,6 +206,11 @@ class JsonFlatOutput:
         return org_tree.to_flat_json()
 
 
+class Default(Dict[str, str]):
+    def __missing__(self, key: str) -> str:
+        return key
+
+
 class TextTreeOutput:
     def __init__(self, node_name_format: str) -> None:
         self.node_name_format = node_name_format
@@ -215,4 +220,4 @@ class TextTreeOutput:
         return "".join([f"{pre}{self._format_name(node)}\n" for pre, _, node in r])
 
     def _format_name(self, node: anytree.Node) -> str:
-        return self.node_name_format.format_map(node.Properties)
+        return self.node_name_format.format_map(Default(node.Properties))
