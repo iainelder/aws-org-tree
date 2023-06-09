@@ -191,7 +191,8 @@ https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_
 
 * Refactor the code done quick
 
-   * Transformer/Output classes instead of methods on OrgTree
+   * Move methods on OrgTree to Output classes
+   * Replace OrgTree class with a build function that returns an AnyTree
    * Class for each of the org things
    * NodeMixin in a class that also accepts a selector for the attributes to show
 

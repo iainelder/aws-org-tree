@@ -40,9 +40,9 @@ def main():
     args = OrgTreeArgParser().parse_args(namespace=OrgTreeArgs())
 
     formatter: Formatter = {
-        "json-flat": JsonFlatExporter(),
-        "json-tree": JsonTreeExporter(),
-        "text-tree": TreeRenderer(args.node_name_format),
+        "json-flat": JsonFlatOutput(),
+        "json-tree": JsonTreeOutput(),
+        "text-tree": TextTreeOutput(args.node_name_format),
     }[args.tree_format]
 
     print(formatter.render(OrgTree().build()))
@@ -182,17 +182,17 @@ class Formatter(Protocol):
         ...
 
 
-class JsonFlatExporter:
+class JsonTreeOutput:
     def render(self, org_tree):
         return org_tree.to_json()
 
 
-class JsonTreeExporter:
+class JsonFlatOutput:
     def render(self, org_tree):
         return org_tree.to_flat_json()
 
 
-class TreeRenderer:
+class TextTreeOutput:
     def __init__(self, node_name_format):
         self.node_name_format = node_name_format
 
