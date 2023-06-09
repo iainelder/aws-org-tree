@@ -3,6 +3,8 @@ name = "aws-org-tree"
 version = "0.2.0"
 description = ""
 authors = ["Iain Samuel McLean Elder <iain@isme.es>"]
+readme = "README.md"
+repository = "https://github.com/iainelder/aws-org-tree"
 
 [tool.poetry.scripts]
 aws-org-tree = "aws_org_tree:main"
