@@ -18,3 +18,13 @@ repos:
     rev: 23.3.0
     hooks:
       - id: black
+
+  # Don't use the official mypy hook. It's awkward to configure with dependencies
+  # because it runs in a different virtualenv.
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy .
+        language: system
+        pass_filenames: false
