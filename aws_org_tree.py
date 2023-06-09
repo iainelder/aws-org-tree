@@ -35,7 +35,6 @@ class OrgTreeArgs(Namespace):
 
 
 def main():
-
     args = OrgTreeArgParser().parse_args(namespace=OrgTreeArgs())
 
     configure_logging(args.log_level)
@@ -77,21 +76,17 @@ class OrgTree(object):
     @logdecorator.log_on_start(logging.INFO, "Start building org tree", logger=logger)
     @logdecorator.log_on_end(logging.INFO, "Finish building org tree", logger=logger)
     def build(self):
-
         root = self._get_root()
         self._root = self._build_tree(root, parent=None)
         return self
 
     def to_dict(self):
-
         return anytree.exporter.DictExporter().export(self._root)
 
     def to_json(self):
-
         return anytree.exporter.JsonExporter(cls=ISODateJSONEncoder).export(self._root)
 
     def to_flat_dict(self):
-
         return [
             {
                 **n.Properties,
@@ -101,7 +96,6 @@ class OrgTree(object):
         ]
 
     def to_flat_json(self):
-
         return json.dumps(self.to_flat_dict(), cls=ISODateJSONEncoder)
 
     def render(self):
@@ -112,13 +106,11 @@ class OrgTree(object):
         logging.DEBUG, "Got org root {result[" "Id" "]}", logger=logger
     )
     def _get_root(self):
-
         root = self._orgs.list_roots()["Roots"][0]
         root["Type"] = "ROOT"
         return root
 
     def _build_tree(self, org_thing, parent):
-
         root = self._build_node(org_thing, parent)
 
         if root.Properties["Type"] == "ACCOUNT":
@@ -148,7 +140,6 @@ class OrgTree(object):
         logger=logger,
     )
     def _get_children(self, parent_id, child_type):
-
         if child_type == "ACCOUNT":
             return self._list_accounts_for_parent(parent_id)
         if child_type == "ORGANIZATIONAL_UNIT":
