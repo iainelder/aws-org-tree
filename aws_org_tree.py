@@ -3,7 +3,6 @@
 import datetime
 import json
 import logging
-import sys
 from argparse import ArgumentParser, Namespace
 from typing import Protocol
 
@@ -13,7 +12,9 @@ import boto3
 import logdecorator
 from anytree import LevelOrderIter
 
+# I need a global logger for the logdecorator functions.
 logger = None
+
 
 class OrgTreeArgParser(ArgumentParser):
     def __init__(self):
@@ -21,23 +22,23 @@ class OrgTreeArgParser(ArgumentParser):
         self.add_argument(
             "--tree-format",
             default="text-tree",
-            choices=["json-flat", "json-tree", "text-tree"]
+            choices=["json-flat", "json-tree", "text-tree"],
         )
-        self.add_argument(
-            "--node-name-format", default="{Id}"
-        )
+        self.add_argument("--node-name-format", default="{Id}")
+        self.add_argument("--log-level", default="WARNING")
 
 
 class OrgTreeArgs(Namespace):
     tree_format: str
     node_name_format: str
+    log_level: str
 
 
 def main():
 
-    configure_logging()
-
     args = OrgTreeArgParser().parse_args(namespace=OrgTreeArgs())
+
+    configure_logging(args.log_level)
 
     formatter: Formatter = {
         "json-flat": JsonFlatOutput(),
@@ -48,19 +49,23 @@ def main():
     print(formatter.render(OrgTree().build()))
 
 
-def configure_logging():
+def configure_logging(log_level):
+    """Set the log level on this module.
+
+    Don't change the log level for boto3. Its DEBUG level floods the log.
+    """
 
     global logger
 
-    logging.basicConfig(
-        format="%(asctime)s %(levelname)-8s %(message)s",
-        level=logging.INFO,
+    formatter = logging.Formatter(
+        fmt="%(asctime)s %(levelname)-8s %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-
-    # FIXME: Where is a better place for this?
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
+    logger.setLevel(log_level)
 
 
 class OrgTree(object):
