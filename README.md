@@ -164,8 +164,6 @@ The OrgTree class traverses the organization by recursively listing the children
 
 [Logdecorator](https://github.com/sighalt/logdecorator) provides the logging while keeping the business logic clean.
 
-[CollatorClient](https://github.com/iainelder/boto-collator-client) is used to abstract over the paginated API responses.
-
 ## Trees in Python
 
 A survey article on making data tree in Python:
