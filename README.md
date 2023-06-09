@@ -1,6 +1,6 @@
 # aws-org-tree
 
-Uses AnyTree to render and export the complete organizational structure.
+Renders and exports the tree structure of an AWS organization.
 
 ## Basics
 
@@ -15,7 +15,7 @@ aws-org-tree
 or
 
 ```bash
-aws-org-tree text-tree
+aws-org-tree --tree-format text-tree
 ```
 
 </summary>
@@ -23,20 +23,12 @@ aws-org-tree text-tree
 Result:
 
 ```text
-r-auh0
-├── 897617218731
-├── 975072629527
-├── 480783779961
-├── 139442570134
-├── ou-auh0-udicosld
-│   └── 345132479590
-├── ou-auh0-5qqlm6wn
-│   └── 749430203777
-└── ou-auh0-p5cmxwe9
-    ├── 933189656188
-    ├── 638726906110
-    ├── 423811555754
-    └── 192985681585
+r-p74l
+├── 039444814027
+├── ou-p74l-a2llanp8
+└── ou-p74l-094nw8v7
+    ├── 386884128156
+    └── 466721047587
 ```
 </details>
 
@@ -45,15 +37,15 @@ r-auh0
 Print a JSON tree representation of the same with all attributes. (Click to show output.)
 
 ```bash
-aws-org-tree json-tree | jq
+aws-org-tree --tree-format json-tree
 ```
 </summary>
 
 ```json
 {
   "Properties": {
-    "Id": "r-auh0",
-    "Arn": "arn:aws:organizations::480783779961:root/o-webyrpj5yp/r-auh0",
+    "Id": "r-p74l",
+    "Arn": "arn:aws:organizations::039444814027:root/o-p66trezrse/r-p74l",
     "Name": "Root",
     "PolicyTypes": [
       {
@@ -63,34 +55,69 @@ aws-org-tree json-tree | jq
     ],
     "Type": "ROOT"
   },
-  "name": "r-auh0",
+  "name": "r-p74l",
   "children": [
     {
       "Properties": {
-        "Id": "897617218731",
-        "Type": "ACCOUNT",
-        "Arn": "arn:aws:organizations::480783779961:account/o-webyrpj5yp/897617218731",
-        "Email": "...",
-        "Name": "...",
+        "Id": "039444814027",
+        "Arn": "arn:aws:organizations::039444814027:account/o-p66trezrse/039444814027",
+        "Email": "iain+awsroot+zcskbx@isme.es",
+        "Name": "isme-root-zcskbx",
         "Status": "ACTIVE",
-        "JoinedMethod": "CREATED",
-        "JoinedTimestamp": "2021-09-29T17:00:35.949000+02:00"
+        "JoinedMethod": "INVITED",
+        "JoinedTimestamp": "2023-06-08T12:14:55.704000+02:00",
+        "Type": "ACCOUNT"
       },
-      "name": "897617218731"
+      "name": "039444814027"
     },
     {
       "Properties": {
-        "Id": "975072629527",
-        "Type": "ACCOUNT",
-        "Arn": "arn:aws:organizations::480783779961:account/o-webyrpj5yp/975072629527",
-        "Email": "...",
-        "Name": "...",
-        "Status": "ACTIVE",
-        "JoinedMethod": "CREATED",
-        "JoinedTimestamp": "2021-09-27T17:37:30.689000+02:00"
+        "Id": "ou-p74l-a2llanp8",
+        "Arn": "arn:aws:organizations::039444814027:ou/o-p66trezrse/ou-p74l-a2llanp8",
+        "Name": "Sandbox",
+        "Type": "ORGANIZATIONAL_UNIT"
       },
-      "name": "975072629527"
+      "name": "ou-p74l-a2llanp8"
     },
+    {
+      "Properties": {
+        "Id": "ou-p74l-094nw8v7",
+        "Arn": "arn:aws:organizations::039444814027:ou/o-p66trezrse/ou-p74l-094nw8v7",
+        "Name": "Security",
+        "Type": "ORGANIZATIONAL_UNIT"
+      },
+      "name": "ou-p74l-094nw8v7",
+      "children": [
+        {
+          "Properties": {
+            "Id": "386884128156",
+            "Arn": "arn:aws:organizations::039444814027:account/o-p66trezrse/386884128156",
+            "Email": "iain+awsroot+zcskbx+log-archive@isme.es",
+            "Name": "Log Archive",
+            "Status": "ACTIVE",
+            "JoinedMethod": "CREATED",
+            "JoinedTimestamp": "2023-06-08T12:15:24.407000+02:00",
+            "Type": "ACCOUNT"
+          },
+          "name": "386884128156"
+        },
+        {
+          "Properties": {
+            "Id": "466721047587",
+            "Arn": "arn:aws:organizations::039444814027:account/o-p66trezrse/466721047587",
+            "Email": "iain+awsroot+zcskbx+audit@isme.es",
+            "Name": "Audit",
+            "Status": "ACTIVE",
+            "JoinedMethod": "CREATED",
+            "JoinedTimestamp": "2023-06-08T12:15:15.815000+02:00",
+            "Type": "ACCOUNT"
+          },
+          "name": "466721047587"
+        }
+      ]
+    }
+  ]
+}
 ```
 </details>
 
@@ -99,15 +126,15 @@ aws-org-tree json-tree | jq
 Print a flat JSON representation of the same with all attributes. (Click to show output.)
 
 ```bash
-aws-org-tree json-flat | jq
+aws-org-tree --tree-format json-flat | jq
 ```
 </summary>
 
 ```json
 [
   {
-    "Id": "r-auh0",
-    "Arn": "arn:aws:organizations::480783779961:root/o-webyrpj5yp/r-auh0",
+    "Id": "r-p74l",
+    "Arn": "arn:aws:organizations::039444814027:root/o-p66trezrse/r-p74l",
     "Name": "Root",
     "PolicyTypes": [
       {
@@ -119,27 +146,53 @@ aws-org-tree json-flat | jq
     "Parent": null
   },
   {
-    "Id": "897617218731",
-    "Type": "ACCOUNT",
-    "Arn": "arn:aws:organizations::480783779961:account/o-webyrpj5yp/897617218731",
-    "Email": "...",
-    "Name": "...",
+    "Id": "039444814027",
+    "Arn": "arn:aws:organizations::039444814027:account/o-p66trezrse/039444814027",
+    "Email": "iain+awsroot+zcskbx@isme.es",
+    "Name": "isme-root-zcskbx",
     "Status": "ACTIVE",
-    "JoinedMethod": "CREATED",
-    "JoinedTimestamp": "2021-09-29T17:00:35.949000+02:00",
-    "Parent": "r-auh0"
+    "JoinedMethod": "INVITED",
+    "JoinedTimestamp": "2023-06-08T12:14:55.704000+02:00",
+    "Type": "ACCOUNT",
+    "Parent": "r-p74l"
   },
   {
-    "Id": "975072629527",
-    "Type": "ACCOUNT",
-    "Arn": "arn:aws:organizations::480783779961:account/o-webyrpj5yp/975072629527",
-    "Email": "...",
-    "Name": "...",
+    "Id": "ou-p74l-a2llanp8",
+    "Arn": "arn:aws:organizations::039444814027:ou/o-p66trezrse/ou-p74l-a2llanp8",
+    "Name": "Sandbox",
+    "Type": "ORGANIZATIONAL_UNIT",
+    "Parent": "r-p74l"
+  },
+  {
+    "Id": "ou-p74l-094nw8v7",
+    "Arn": "arn:aws:organizations::039444814027:ou/o-p66trezrse/ou-p74l-094nw8v7",
+    "Name": "Security",
+    "Type": "ORGANIZATIONAL_UNIT",
+    "Parent": "r-p74l"
+  },
+  {
+    "Id": "386884128156",
+    "Arn": "arn:aws:organizations::039444814027:account/o-p66trezrse/386884128156",
+    "Email": "iain+awsroot+zcskbx+log-archive@isme.es",
+    "Name": "Log Archive",
     "Status": "ACTIVE",
     "JoinedMethod": "CREATED",
-    "JoinedTimestamp": "2021-09-27T17:37:30.689000+02:00",
-    "Parent": "r-auh0"
+    "JoinedTimestamp": "2023-06-08T12:15:24.407000+02:00",
+    "Type": "ACCOUNT",
+    "Parent": "ou-p74l-094nw8v7"
   },
+  {
+    "Id": "466721047587",
+    "Arn": "arn:aws:organizations::039444814027:account/o-p66trezrse/466721047587",
+    "Email": "iain+awsroot+zcskbx+audit@isme.es",
+    "Name": "Audit",
+    "Status": "ACTIVE",
+    "JoinedMethod": "CREATED",
+    "JoinedTimestamp": "2023-06-08T12:15:15.815000+02:00",
+    "Type": "ACCOUNT",
+    "Parent": "ou-p74l-094nw8v7"
+  }
+]
 ```
 </details>
 
