@@ -12,7 +12,7 @@ Print a text tree representation of the organization showing just the IDs. (Clic
 aws-org-tree
 ```
 
-or 
+or
 
 ```bash
 aws-org-tree text-tree
@@ -156,11 +156,11 @@ See [Building a hierarchy bridge table](building-a-hierarchy-bridge-table.md) fo
 
 ## Solution Notes
 
-The OrgTree class traverses the organization by recursively listing the children. Organizational units can contain other organizational units and accounts. Accounts are leaves. 
+The OrgTree class traverses the organization by recursively listing the children. Organizational units can contain other organizational units and accounts. Accounts are leaves.
 
 [Boto3](https://github.com/boto/boto3) is used for all API calls to AWS Organizations.
 
-[AnyTree](https://github.com/c0fec0de/anytree) is used to to store and operate on the internal tree data structure. 
+[AnyTree](https://github.com/c0fec0de/anytree) is used to to store and operate on the internal tree data structure.
 
 [Logdecorator](https://github.com/sighalt/logdecorator) provides the logging while keeping the business logic clean.
 

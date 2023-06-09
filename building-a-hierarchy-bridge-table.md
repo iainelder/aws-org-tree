@@ -23,9 +23,9 @@ aws-org-tree json-flat \
 Quality checks. The number of objects should be the number of accounts plus the number of OUs. (In this example the numbers are just made up and they won't necessarily add up.)
 
 ```text
-$ jq 'length' org-tree_cfs.json 
+$ jq 'length' org-tree_cfs.json
 123
-$ jq 'length' org-tree_dpp.json 
+$ jq 'length' org-tree_dpp.json
 234
 ```
 
@@ -71,9 +71,9 @@ WITH rec (
     0 AS level,
     1 AS top_flag
   FROM org_tree_dump
-  
+
   UNION ALL
-  
+
   SELECT
     rec_plus1.OrgScope AS org_scope,
     rec.superior_key,
@@ -150,15 +150,15 @@ https://www.nuwavesolutions.com/ragged_hierarchical_dimensions/
 
 > To create a hierarchy bridge table you will create a table consisting of each record associated with itself and its association with all of its subordinates regardless of level. You should also capture the number of levels removed from itself and flags indicating if this is the top of the hierarchy or the bottom of the hierarchy.
 
-A way to build a hierchy bridge table in SQL from a recursive table using a recursive CTE. 
+A way to build a hierchy bridge table in SQL from a recursive table using a recursive CTE.
 
 http://www.kimballgroup.com/wp-content/uploads/2014/11/Building-the-Hierarchy-Bridge-Table.pdf
 
 From Kimball:
 
-> In our books and classes, we describe a powerful technique for representing complex ragged 
-hierarchies of indeterminate depth. The centerpiece of the design is a bridge table whose grain is every path from any given node in the tree to all the descendants below that node. 
- 
+> In our books and classes, we describe a powerful technique for representing complex ragged
+hierarchies of indeterminate depth. The centerpiece of the design is a bridge table whose grain is every path from any given node in the tree to all the descendants below that node.
+
 > Please see pages 215 to 224 in The Data Warehouse Toolkit, Third Edition, for an in-depth discussion of this approach to modeling ragged hierarchies.
 
 Another example of building a hierarchical bridge table using Oracle syntax.
