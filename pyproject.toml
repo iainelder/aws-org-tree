@@ -21,6 +21,7 @@ boto3-stubs = {extras = ["organizations"], version = "^1.21.42"}
 # Keep this until the botocore issue is resolved.
 # Follow https://github.com/boto/botocore/issues/2926 for details.
 urllib3 = "<2"
+mypy-boto3-organizations = "^1.26.83"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.28.0"
@@ -34,6 +35,19 @@ isort = "^5.10.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+files = "aws_org_tree.py"
+strict = true
+# Logdecorator uses untyped decorators.
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = ["logdecorator", "anytree", "anytree.exporter"]
+ignore_missing_imports = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

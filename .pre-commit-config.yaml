@@ -32,6 +32,6 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: poetry run mypy .
+        entry: poetry run mypy --show-error-codes
+        types: [python]
         language: system
-        pass_filenames: false
