@@ -1,6 +1,8 @@
 exclude: |
   (?x)^(
     traversal.py|
+    traverse_org.py|
+    org_types.py|
     test_build_org_tree.py|
     conftest.py|
     aws_org_graph.py
@@ -18,6 +20,11 @@ repos:
     rev: 23.3.0
     hooks:
       - id: black
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
 
   # Don't use the official mypy hook. It's awkward to configure with dependencies
   # because it runs in a different virtualenv.
