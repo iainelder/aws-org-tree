@@ -3,6 +3,7 @@ import json
 import logging
 from argparse import ArgumentParser, Namespace
 from typing import Any, Dict, List, Mapping, Optional, Protocol, TypeVar, Union
+from importlib.metadata import version
 
 import anytree
 import anytree.exporter
@@ -33,6 +34,7 @@ class OrgTreeArgParser(ArgumentParser):
         )
         self.add_argument("--node-name-format", default="{Name} ({Id})")
         self.add_argument("--log-level", default="WARNING")
+        self.add_argument("--version", action="version", version=version("aws-org-tree"))
 
 
 class OrgTreeArgs(Namespace):
