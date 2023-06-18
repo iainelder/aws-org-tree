@@ -5,9 +5,10 @@ description = ""
 authors = ["Iain Samuel McLean Elder <iain@isme.es>"]
 readme = "README.md"
 repository = "https://github.com/iainelder/aws-org-tree"
+packages = [{include = "aws_org_tree"}]
 
 [tool.poetry.scripts]
-aws-org-tree = "aws_org_tree:main"
+aws-org-tree = "aws_org_tree.aws_org_tree:main"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4"
