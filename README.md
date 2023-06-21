@@ -38,3 +38,25 @@ ROOT Email
 ## Other formats
 
 I removed the JSON tree (`json-tree`) and flat JSON formats (`json-flat`) formats Use [version `0.2.0`](https://github.com/iainelder/aws-org-tree/tree/0.2.0) if you need those.
+
+## Development
+
+Install Python 3.8.
+
+Install [Poetry](https://python-poetry.org/) via [Pipx](https://pypa.github.io/pipx/).
+
+Clone the repo.
+
+Run `poetry install`.
+
+Hack away.
+
+Run quality checks with `poetry run pre-commit run --all-files`.
+
+Install quality checks as [pre-commit checks](https://pre-commit.com/) with `poetry run pre-commit install`.
+
+## Continuous integration
+
+Push to the main branch to run the development quality checks via GitHub Actions.
+
+Run continuous integration locally with [act](https://github.com/nektos/act).

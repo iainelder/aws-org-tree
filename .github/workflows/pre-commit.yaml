@@ -1,0 +1,28 @@
+name: Run pre-commit checks
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    container: 
+      image: python:3.8
+
+    steps:
+
+      # Pipx puts executables here.
+      - run: printf "%s/.local/bin\n" "${HOME}" >> "${GITHUB_PATH}"
+
+      - run: python3 -m pip install pipx
+
+      - run: pipx install poetry && pipx list
+
+      - uses: actions/checkout@v3
+
+      # Poetry fails in act without `--no-ansi`.
+      # See https://github.com/python-poetry/poetry/issues/7184
+      - run: poetry install --no-ansi
+
+      - run: poetry run pre-commit run --all-files
