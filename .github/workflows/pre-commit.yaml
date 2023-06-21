@@ -21,9 +21,12 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      # Avoid "fatal: detected dubious ownership in repository at
+      # Avoid git error "fatal: detected dubious ownership in repository at
       # '/__w/aws-org-tree/aws-org-tree'".
       # See https://github.com/reef-technologies/B2_Command_Line_Tool/commit/cc42267d4f0637ddfa12608be74e40a3647e7436
+      # Pre-commit shows "An error has occurred: FatalError: git failed. Is it
+      # installed, and are you in a Git repository directory? Check the log at
+      # /github/home/.cache/pre-commit/pre-commit.log"
       - run: >
           git config --global --add safe.directory "*" &&
           git rev-parse --is-inside-worktree
@@ -32,11 +35,4 @@ jobs:
       # See https://github.com/python-poetry/poetry/issues/7184
       - run: poetry install --no-ansi
 
-      # FIXME: "An error has occurred: FatalError: git failed. Is it installed,
-      # and are you in a Git repository directory? Check the log at
-      # /github/home/.cache/pre-commit/pre-commit.log"
       - run: poetry run pre-commit run --all-files
-        continue-on-error: true
-
-
-      - run: cat /github/home/.cache/pre-commit/pre-commit.log
