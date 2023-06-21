@@ -30,11 +30,6 @@ ROOT Email
     └── ACCOUNT iain+awsroot+zcskbx+audit@isme.es
 ```
 
-## TODO
-
-* Use [orgtreepubsub](https://github.com/iainelder/orgtreepubsub) to crawl the org and model the resources
-* Allow templating to pull out all attributes of all resources
-
 ## Other formats
 
 I removed the JSON tree (`json-tree`) and flat JSON formats (`json-flat`) formats Use [version `0.2.0`](https://github.com/iainelder/aws-org-tree/tree/0.2.0) if you need those.
