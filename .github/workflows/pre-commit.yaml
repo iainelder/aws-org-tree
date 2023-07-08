@@ -35,4 +35,12 @@ jobs:
       # See https://github.com/python-poetry/poetry/issues/7184
       - run: poetry install --no-ansi
 
+      - uses: giantswarm/install-binary-action@v1.1.0
+        with:
+          binary: actionlint
+          version: 1.6.25
+          download_url: "https://github.com/rhysd/actionlint/releases/download/v1.6.25/actionlint_${version}_linux_amd64.tar.gz"
+          tarball_binary_path: "${binary}"
+          smoke_test: "${binary} --version"
+
       - run: poetry run pre-commit run --all-files
