@@ -7,7 +7,7 @@ name: Release
 on:
   workflow_run:
     workflows: ["Run pre-commit checks"]
-    types: ["Completed"]
+    types: ["completed"]
   workflow_dispatch:
 
 jobs:
