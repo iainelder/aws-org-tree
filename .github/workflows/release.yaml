@@ -1,0 +1,18 @@
+# Run deployment workflow if tests workflow is passed
+# https://stackoverflow.com/questions/64951853/run-deployment-workflow-if-tests-workflow-is-passed
+# How to run job if tag is v*
+# https://github.com/orgs/community/discussions/25911
+name: Release
+
+on:
+  workflow_run:
+    workflows: ["Run pre-commit checks"]
+    types: ["Completed"]
+  workflow_dispatch:
+
+jobs:
+  release:
+    if: "startswith(github.event.ref, 'refs/tags/')"
+    runs-on: ubuntu-latest
+    steps:
+      - run: git show-ref
