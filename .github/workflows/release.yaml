@@ -11,8 +11,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    if: "startswith(github.event.ref, 'refs/tags/')"
+  print:
+    name: Print event
     runs-on: ubuntu-latest
     steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: "${{ toJson(github) }}"
+      run: printf "%s\n" "$GITHUB_CONTEXT"
+
+  release:
+    # if: "startswith(github.event.ref, 'refs/tags/')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
       - run: git show-ref

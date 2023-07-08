@@ -1,1 +1,1 @@
---platform ubuntu-latest=node:16-buster-slim
+--platform ubuntu-latest=node:16-buster
