@@ -12,16 +12,20 @@ on:
 
 jobs:
   print:
-    name: Print event
     runs-on: ubuntu-latest
+
+    env:
+      GITHUB_CONTEXT: "${{ toJson(github) }}"
+      expression: "${{ startswith(github.ref, 'refs/tags') }}"
+
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: "${{ toJson(github) }}"
-      run: printf "%s\n" "$GITHUB_CONTEXT"
+
+      - run: printf "%s\n" "$GITHUB_CONTEXT"
+
+      - run: printf "%s\n" "$expression"
 
   release:
-    # if: "startswith(github.event.ref, 'refs/tags/')"
+    if: "startswith(github.ref, 'refs/tags/')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
