@@ -51,7 +51,7 @@ strict = true
 disallow_untyped_decorators = false
 
 [[tool.mypy.overrides]]
-module = ["logdecorator", "anytree", "anytree.exporter"]
+module = ["logdecorator", "anytree", "anytree.exporter", "cli_test_helpers"]
 ignore_missing_imports = true
 
 [build-system]

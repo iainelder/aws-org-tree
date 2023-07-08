@@ -35,7 +35,7 @@ def paginated_accounts(mocker: MockerFixture) -> None:
         }
     }
 
-    @paginate(pagination_model=model)  # type: ignore[misc]
+    @paginate(pagination_model=model)
     def list_accounts_for_parent(self: Any, **kwargs: Any) -> Any:
         parent_id = self.validate_parent_id(kwargs["ParentId"])
         return [
@@ -82,7 +82,7 @@ def paginated_units(mocker: MockerFixture) -> None:
         }
     }
 
-    @paginate(pagination_model=model)  # type: ignore[misc]
+    @paginate(pagination_model=model)
     def list_organizational_units_for_parent(self: Any, **kwargs: Any) -> Any:
         parent_id = self.validate_parent_id(kwargs["ParentId"])
         return [
