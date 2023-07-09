@@ -20,11 +20,6 @@ repos:
   #   hooks:
   #     - id: isort
 
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.23.2
-    hooks:
-      - id: check-github-workflows
-
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
     rev: v1.6.25
     hooks:
