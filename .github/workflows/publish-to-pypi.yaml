@@ -16,3 +16,11 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+
+  debug:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_CONTEXT: "${{ toJson(github) }}"
+    steps:
+      - name: Print github context
+        run: printf "%s" "$GITHUB_CONTEXT"
