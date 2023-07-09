@@ -27,15 +27,6 @@ jobs:
           virtualenvs-in-project: true
           installer-parallel: true
 
-      - name: Install actionlint
-        uses: giantswarm/install-binary-action@v1.1.0
-        with:
-          binary: actionlint
-          version: 1.6.25
-          download_url: "https://github.com/rhysd/actionlint/releases/download/v${version}/actionlint_${version}_linux_amd64.tar.gz"
-          tarball_binary_path: "${binary}"
-          smoke_test: "${binary} --version"
-
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v3

@@ -25,6 +25,11 @@ repos:
     hooks:
       - id: check-github-workflows
 
+  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
+    rev: v1.6.25
+    hooks:
+      - id: actionlint
+
   - repo: local
     hooks:
       - id: pytest
@@ -37,11 +42,4 @@ repos:
         name: mypy
         entry: poetry run mypy --show-error-codes
         types: [python]
-        language: system
-
-      - id: actionlint
-        name: actionlint
-        entry: actionlint
-        types: [yaml]
-        files: .github/workflows
         language: system
