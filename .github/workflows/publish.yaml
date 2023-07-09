@@ -51,7 +51,7 @@ jobs:
         run: poetry install --no-interaction
 
       - name: Run pre-commit checks
-        run: poetry run pre-commit run --all-files
+        run: poetry run pre-commit run --all-files --verbose
 
       - name: Build package distributions
         run: poetry build
