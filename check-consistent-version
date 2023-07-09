@@ -6,4 +6,4 @@ diff \
 --label pyproject.toml \
 --label "latest tag" \
 <(grep -oP '(?<=^version = ").*?(?=")' pyproject.toml) \
-<(git describe)
+<(git describe --abbrev=0)
