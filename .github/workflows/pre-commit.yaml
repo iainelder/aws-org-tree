@@ -66,3 +66,16 @@ jobs:
           files: dist/*
     permissions:
       contents: write
+
+  publish:
+    needs: release
+    runs-on: ubuntu-latest
+    environment:
+      name: TestPyPI
+    permissions:
+      id-token: write
+    steps:
+      - name: Publish package distributions to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
