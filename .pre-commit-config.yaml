@@ -38,3 +38,9 @@ repos:
         entry: poetry run mypy --show-error-codes
         types: [python]
         language: system
+
+      - id: consistent-version
+        name: Check consistent version
+        entry: ./check-consistent-version
+        pass_filenames: false
+        language: system

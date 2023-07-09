@@ -1,0 +1,9 @@
+#!/bin/env bash
+
+diff \
+--unified \
+--color=always \
+--label pyproject.toml \
+--label "latest tag" \
+<(grep -oP '(?<=^version = ").*?(?=")' pyproject.toml) \
+<(git describe)
