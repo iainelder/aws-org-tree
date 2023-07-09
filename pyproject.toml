@@ -45,7 +45,6 @@ pytest = "^7.3.2"
 profile = "black"
 
 [tool.mypy]
-files = "aws_org_tree.py"
 strict = true
 # Logdecorator uses untyped decorators.
 disallow_untyped_decorators = false
