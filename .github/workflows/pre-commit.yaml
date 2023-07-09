@@ -47,21 +47,9 @@ jobs:
 
   release:
     needs: pre-commit
-    if: "startswith(github.ref, 'refs/tags/')"
+    if: "github.ref_type == 'tag'"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: git show-ref
-
-  print:
-    runs-on: ubuntu-latest
-
-    env:
-      GITHUB_CONTEXT: "${{ toJson(github) }}"
-      expression: "${{ startswith(github.ref, 'refs/tags') }}"
-
-    steps:
-
-      - run: printf "%s\n" "$GITHUB_CONTEXT"
-
-      - run: printf "%s\n" "$expression"
+      - uses: softprops/action-gh-release@v1
+    permissions:
+      contents: write
