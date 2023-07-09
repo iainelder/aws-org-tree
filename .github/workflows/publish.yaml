@@ -83,7 +83,7 @@ jobs:
     permissions:
       contents: write
 
-  publish:
+  publish-to-test:
     needs: release
     runs-on: ubuntu-latest
     environment:
@@ -101,3 +101,20 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+
+  publish-to-prod:
+    needs: publish-to-test
+    runs-on: ubuntu-latest
+    environment:
+      name: PyPI
+    permissions:
+      id-token: write
+    steps:
+      - name: Download package distributions
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: dist/
+
+      - name: Publish package distributions to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
