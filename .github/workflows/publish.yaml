@@ -13,6 +13,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      - name: Set up Python
+        id: set-up-python
+        uses: actions/setup-python@4
+        with:
+          python-version: 3.8
+
       - name: Install Poetry
         uses: snok/install-poetry@v1.3.3
         with:
@@ -30,8 +36,19 @@ jobs:
           tarball_binary_path: "${binary}"
           smoke_test: "${binary} --version"
 
-      - name: Install project
-        run: poetry install
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.set-up-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install Python dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+
+      - name: Install aws-org-tree
+        run: poetry install --no-interaction
 
       - name: Run pre-commit checks
         run: poetry run pre-commit run --all-files
