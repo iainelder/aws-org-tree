@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pre-commit:
+  build:
     runs-on: ubuntu-latest
     container:
       image: python:3.8
@@ -45,11 +45,23 @@ jobs:
 
       - run: poetry run pre-commit run --all-files
 
+      - run: poetry build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
+
   release:
-    needs: pre-commit
+    needs: build
     if: "github.ref_type == 'tag'"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
       - uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
     permissions:
       contents: write
