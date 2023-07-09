@@ -26,7 +26,7 @@ jobs:
         with:
           binary: actionlint
           version: 1.6.25
-          download_url: "https://github.com/rhysd/actionlint/releases/download/v1.6.25/actionlint_${version}_linux_amd64.tar.gz"
+          download_url: "https://github.com/rhysd/actionlint/releases/download/v${version}/actionlint_${version}_linux_amd64.tar.gz"
           tarball_binary_path: "${binary}"
           smoke_test: "${binary} --version"
 
