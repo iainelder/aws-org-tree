@@ -15,7 +15,7 @@ jobs:
 
       - name: Set up Python
         id: set-up-python
-        uses: actions/setup-python@4
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
 
