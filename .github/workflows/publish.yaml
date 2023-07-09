@@ -55,9 +55,21 @@ jobs:
           name: build
           path: dist/
 
+      # I wanted to implement it as a pre-commit check but the tag is created
+      # after the commit. Maybe it can be added as a pre-push script.
+      - name: Check version consistency
+        if: "github.ref_type == 'tag'"
+        run: |
+          diff \
+          --unified \
+          --color=always \
+          --label pyproject.toml \
+          --label "latest tag" \
+          <(grep -oP '(?<=^version = ").*?(?=")' pyproject.toml) \
+          <(git describe --abbrev=0)
+
   release:
     needs: build
-    if: "github.ref_type == 'tag'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
