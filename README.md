@@ -33,7 +33,7 @@ ROOT Email
 ## Installation
 
 
-Prerequisiste: Python 3.8 at least.
+Prerequisite: Python 3.8 at least.
 
 Recommended: [pipx](https://pipxproject.github.io/pipx/), which installs the tool in an isolated virtualenv while linking the script you need.
 
