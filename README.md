@@ -30,7 +30,32 @@ ROOT Email
     └── ACCOUNT iain+awsroot+zcskbx+audit@isme.es
 ```
 
-## Other formats
+## Installation
+
+
+Prerequisiste: Python 3.8 at least.
+
+Recommended: [pipx](https://pipxproject.github.io/pipx/), which installs the tool in an isolated virtualenv while linking the script you need.
+
+Install using [pipx](https://pipxproject.github.io/pipx/) (recommended because it uses an isolated virtualenv to avoid dependency conflicts with other Python things you may have).
+
+```bash
+pipx install aws-org-tree
+```
+
+Or install using pip.
+
+```bash
+pip install --user aws-org-tree
+```
+
+Learn to use it.
+
+```bash
+aws-org-tree --help
+```
+
+## Other output formats
 
 I removed the JSON tree (`json-tree`) and flat JSON formats (`json-flat`) formats Use [version `0.2.0`](https://github.com/iainelder/aws-org-tree/tree/0.2.0) if you need those.
 
