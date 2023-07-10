@@ -50,8 +50,8 @@ Run quality checks with `poetry run pre-commit run --all-files`.
 
 Install quality checks as [pre-commit checks](https://pre-commit.com/) with `poetry run pre-commit install`.
 
-## Continuous integration
+## Continuous integration and deployment
 
-Push to the main branch to run the development quality checks via GitHub Actions.
+Push to the main branch to run the tests on every commit via GitHub Actions.
 
-Run continuous integration locally with [act](https://github.com/nektos/act).
+Push an annotated tag of the form `x.y.z` (semantic version) to publish a GitHub release and publish the package distributions to PyPI if the tests pass.
