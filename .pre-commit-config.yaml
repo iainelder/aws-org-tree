@@ -35,6 +35,6 @@ repos:
 
       - id: mypy
         name: mypy
-        entry: poetry run mypy --show-error-codes
-        types: [python]
+        entry: poetry run mypy --show-error-codes .
+        pass_filenames: false
         language: system
