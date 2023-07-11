@@ -2,7 +2,7 @@ import json
 from typing import Any, Final, Iterator
 
 from boto3 import Session
-from moto import mock_organizations  # type: ignore[import]
+from moto import mock_organizations
 from moto.utilities.paginator import paginate  # type: ignore[import]
 from pytest import fixture
 from pytest_mock import MockerFixture
