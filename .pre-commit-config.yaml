@@ -37,4 +37,5 @@ repos:
         name: mypy
         entry: poetry run mypy --show-error-codes .
         pass_filenames: false
+        types: [python]
         language: system
