@@ -7,11 +7,13 @@ import pytest
 
 from aws_org_tree.aws_org_tree import OrgTree
 
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 from types import SimpleNamespace
 
-def session() -> Session:
-    return Session(aws_access_key_id="None", aws_secret_access_key="None")
+
+@pytest.fixture()
+def session() -> Iterable[Session]:
+    yield Session(aws_access_key_id="None", aws_secret_access_key="None")
 
 
 def service_error_factory(code: str, message: str="") -> Callable[..., Any]:
