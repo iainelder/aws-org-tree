@@ -3,7 +3,6 @@ from unittest.mock import patch
 from boto3.session import Session
 from botocore.client import BaseClient
 from botocore.exceptions import ClientError
-from botocore.stub import Stubber
 import pytest
 
 from aws_org_tree.aws_org_tree import OrgTree
@@ -20,12 +19,7 @@ def service_error_factory(code: str, message: str="") -> Callable[..., Any]:
     # Don't know what type operation_model should be. Check botocove-stubs.
     def _raise(self: BaseClient, operation_model, *args, **kwargs) -> Any:  # type: ignore[no-untyped-def]
         http_response = SimpleNamespace(status_code=400)
-
-        parsed_response = {
-            "ResponseMetadata": {"HTTPStatusCode": http_response.status_code},
-            "Error": {"Message": message, "Code": code},
-        }
-
+        parsed_response = {"Error": {"Message": message, "Code": code}}
         return http_response, parsed_response
 
     return _raise
