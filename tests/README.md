@@ -27,7 +27,7 @@ Articles that demonstrate and compare different methods.
 
 * [Comparison of Moto, Stubber, and PySpark](https://github.com/paramraghavan/python-pytest)
 * [Comparison of Moto, Stubber, and LocalStack](https://www.sanjaysiddhanti.com/2020/04/08/s3testing/)
-* An [article](https://xebia.com/blog/how-to-create-python-unit-tests-for-aws-using-the-botocore-stubber/) showing how to use the ([PyPI](https://pypi.org/project/botocore-stubber-recorder/), [GitHub](https://github.com/binxio/botocore-stubber-recorder)) to record an AWS API conversation. Like VCR for Ruby and Python.
+* An [article](https://xebia.com/blog/how-to-create-python-unit-tests-for-aws-using-the-botocore-stubber/) showing how to use the botocore-stubber-recorder package ([PyPI](https://pypi.org/project/botocore-stubber-recorder/), [GitHub](https://github.com/binxio/botocore-stubber-recorder)) to record an AWS API conversation. Like VCR for Ruby and Python.
 * [Example to patch _make_api_call](https://stackoverflow.com/questions/37143597/mocking-boto3-s3-client-method-python)
 
 [^gh-dire]: For this use case Snyk's index gives better results that GitHub's own.
