@@ -20,7 +20,7 @@ def service_error_factory(
     code: str, message: str="", status_code: int=400
 ) -> Callable[..., Any]:
 
-    def respond_with_error(self: BaseClient, *args, **kwargs) -> Any:
+    def respond_with_error(self: BaseClient, *args: Any, **kwargs: Any) -> Any:
         http_response = SimpleNamespace(status_code=status_code)
         parsed_response = {"Error": {"Message": message, "Code": code}}
         return http_response, parsed_response
