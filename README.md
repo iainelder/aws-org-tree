@@ -75,6 +75,8 @@ Run quality checks with `poetry run pre-commit run --all-files`.
 
 Install quality checks as [pre-commit checks](https://pre-commit.com/) with `poetry run pre-commit install`.
 
+Read the [testing README](/tests/README.md).
+
 ## Continuous integration and deployment
 
 Push to the main branch to run the tests on every commit via GitHub Actions.
