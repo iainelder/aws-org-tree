@@ -23,6 +23,7 @@ boto3-stubs = {extras = ["organizations"], version = "^1.21.42"}
 # Follow https://github.com/boto/botocore/issues/2926 for details.
 urllib3 = "<2"
 mypy-boto3-organizations = "^1.26.83"
+orgtreepubsub = {git = "https://github.com/iainelder/orgtreepubsub"}
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.28.0"
