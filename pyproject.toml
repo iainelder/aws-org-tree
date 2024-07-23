@@ -15,8 +15,6 @@ python = ">=3.8,<4"
 boto3 = "^1.18.50"
 anytree = "^2.8.0"
 logdecorator = "^2.2"
-networkx = "^2.8"
-matplotlib = "^3.5.1"
 boto3-stubs = {extras = ["organizations"], version = "^1.21.42"}
 
 # Hint to the Poetry resolver to resolve boto3 correctly.
