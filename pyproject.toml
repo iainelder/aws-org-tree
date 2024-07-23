@@ -11,7 +11,7 @@ packages = [{include = "aws_org_tree"}]
 aws-org-tree = "aws_org_tree.aws_org_tree:main"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4"
+python = "^3.12"
 boto3 = "^1.18.50"
 anytree = "^2.8.0"
 logdecorator = "^2.2"
