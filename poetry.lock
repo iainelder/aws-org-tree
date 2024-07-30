@@ -1638,7 +1638,7 @@ boto3-stubs-lite = {version = "*", extras = ["organizations"]}
 type = "git"
 url = "https://github.com/iainelder/orgtreepubsub"
 reference = "HEAD"
-resolved_reference = "189bbe78b83d661978cad10d84b3615c174a0ab3"
+resolved_reference = "e247965e229d891b8ad5ab07eba3ffa19cfcf1f1"
 
 [[package]]
 name = "packaging"
