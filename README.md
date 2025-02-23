@@ -18,7 +18,7 @@ Root (r-p74l)
 Use the `--node-name-format` option to print different properties of the resources. This part doesn't work well yet because different resources have different properties. If the property is missing the property name is used as a placeholder.
 
 ```bash
-poetry run aws-org-tree --node-name-format "{Type} {Email}"
+aws-org-tree --node-name-format "{Type} {Email}"
 ```
 
 ```text
@@ -33,7 +33,7 @@ ROOT Email
 ## Installation
 
 
-Prerequisite: Python 3.8 at least.
+Prerequisite: Python 3.12 at least.
 
 Recommended: [pipx](https://pipxproject.github.io/pipx/), which installs the tool in an isolated virtualenv while linking the script you need.
 
@@ -55,13 +55,9 @@ Learn to use it.
 aws-org-tree --help
 ```
 
-## Other output formats
-
-I removed the JSON tree (`json-tree`) and flat JSON formats (`json-flat`) formats Use [version `0.2.0`](https://github.com/iainelder/aws-org-tree/tree/0.2.0) if you need those.
-
 ## Development
 
-Install Python 3.8.
+Install Python 3.12.
 
 Install [Poetry](https://python-poetry.org/) via [Pipx](https://pypa.github.io/pipx/).
 
@@ -79,6 +75,6 @@ Read the [testing README](/tests/README.md).
 
 ## Continuous integration and deployment
 
-Push to the main branch to run the tests on every commit via GitHub Actions.
+Push to any branch to run the tests on every commit via GitHub Actions.
 
-Push an annotated tag of the form `x.y.z` (semantic version) to publish a GitHub release and publish the package distributions to PyPI if the tests pass.
+Push an annotated tag of the form `x.y.z` (semantic version) to publish a GitHub release and publish the package distributions to PyPI if the tests pass. It may work on any branch but please only do it on the main branch.
