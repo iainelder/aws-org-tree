@@ -15,21 +15,6 @@ Root (r-p74l)
     └── Audit (466721047587)
 ```
 
-Use the `--node-name-format` option to print different properties of the resources. This part doesn't work well yet because different resources have different properties. If the property is missing the property name is used as a placeholder.
-
-```bash
-aws-org-tree --node-name-format "{Type} {Email}"
-```
-
-```text
-ROOT Email
-├── ACCOUNT iain+awsroot+zcskbx@isme.es
-├── ORGANIZATIONAL_UNIT Email
-└── ORGANIZATIONAL_UNIT Email
-    ├── ACCOUNT iain+awsroot+zcskbx+log-archive@isme.es
-    └── ACCOUNT iain+awsroot+zcskbx+audit@isme.es
-```
-
 ## Installation
 
 
