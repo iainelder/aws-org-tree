@@ -35,6 +35,12 @@ ROOT Email
 
 Prerequisite: Python 3.12 at least.
 
+Recommended: [uv](https://docs.astral.sh/uv/), which installs the tool in an islated virtualenv and is faster than pipx. (You can also use it to install Python 3.12. Not shown here.)
+
+```bash
+uv tool --python 3.12 aws-org-tree
+```
+
 Recommended: [pipx](https://pipxproject.github.io/pipx/), which installs the tool in an isolated virtualenv while linking the script you need.
 
 Install using [pipx](https://pipxproject.github.io/pipx/) (recommended because it uses an isolated virtualenv to avoid dependency conflicts with other Python things you may have).
