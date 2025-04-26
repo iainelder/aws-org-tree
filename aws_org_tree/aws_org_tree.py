@@ -2,6 +2,7 @@ from argparse import ArgumentParser, Namespace
 from importlib.metadata import version
 import sys
 from typing import IO
+from dataclasses import asdict
 from orgtreepubsub import OrgCrawler, Parent, Child
 from boto3 import Session
 
@@ -28,7 +29,6 @@ class AwsOrgTree:
         self.tree: Node | None = None
 
     def add_edge(self, crawler: OrgCrawler, child: Child, parent: Parent) -> None:
-        print(f"{child=} {parent=}")
         if self.tree is None:
             self.tree = Node(name=parent.id, resource=parent)
             parent_node = self.tree
@@ -41,7 +41,7 @@ class AwsOrgTree:
 
     def write_tree(self, node_name_format:str, file: IO[str] = sys.stdout) -> None:
         for pre, _, node in RenderTree(self.tree):
-            name = node_name_format.format_map(Default(node.resource))
+            name = node_name_format.format_map(Default(asdict(node.resource)))
             print(f"{pre}{name}", file=file)
 
 
@@ -53,7 +53,7 @@ class Default(dict[str, str]):
 class OrgTreeArgParser(ArgumentParser):
     def __init__(self) -> None:
         super().__init__()
-        self.add_argument("--node-name-format", default="{Name} ({Id})")
+        self.add_argument("--node-name-format", default="{name} ({id})")
         self.add_argument(
             "--version", action="version", version=version("aws-org-tree")
         )
